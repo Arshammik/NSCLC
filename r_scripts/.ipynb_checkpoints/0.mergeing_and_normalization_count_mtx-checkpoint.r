@@ -1,10 +1,10 @@
 suppressPackageStartupMessages(library(Seurat))
 suppressPackageStartupMessages(library(SeuratData))
 suppressPackageStartupMessages(library(patchwork))
-suppressPackageStartupMessages(library(Matrix))
+suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(ggplot2))
-suppressPackageStartupMessages(library(data.table))
+suppressPackageStartupMessages(library(GEOquery))
 set.seed(42)
 
 data_dirs <- list.files("/home/arsham79/nsclc/data/GSE189357_RAW/", full.names = TRUE)
@@ -23,7 +23,7 @@ GSE131907 <- readRDS("/home/arsham79/nsclc/data/GSE131907_RAW/GSE131907_Lung_Can
 GSE131907 <- data.matrix(GSE131907)
 GSE131907 <- Matrix(GSE131907, sparse = TRUE)
 
-GSE131907_pheno <- readRDS("/home/arsham79/nsclc/data/pheno_data/GSE131907_pheno.rds")
+GSE131907_pheno <- readRDS("/home/arsham79/nsclc/data/GSE131907_RAW/GSE131907_pheno.rds")
 GSE131907_pheno <- GSE131907_pheno[grep("lung",GSE131907_pheno$source_name_ch),]
 cells_to_keep <- data.table(colnames = colnames(GSE131907))
 cells_to_keep[,index := .I]
@@ -40,12 +40,7 @@ P1 <- ggplot(plot1_data, aes(ID, UMI_count)) + geom_boxplot()
 P1 + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 
-pbmc_raw <- CreateSeuratObject(counts = merged_raw_cnt, project = "nsclc", min.cells = 3, min.features = 200)
-pbmc_raw[["mt.percent"]] <- PercentageFeatureSet(object = pbmc_raw, pattern = "^MT-")
-
-pbmc <- subset(pbmc_raw, subset = nFeature_RNA < 5000 & nCount_RNA > 500 & mt.percent < 5)
-#VlnPlot(object = pbmc, features = c("nFeature_RNA", "nCount_RNA", "mt.percent"), ncol = 3, raster = FALSE)
-
+pbmc <- CreateSeuratObject(counts = merged_raw_cnt)
 pbmc <- NormalizeData(object = pbmc, scale.factor = 35000)
 
 gc()
@@ -61,10 +56,9 @@ plot2_data$ID <- sub(".*?_(.*$)","\\1",plot2_data$brc)
 P2 <- ggplot(plot2_data, aes(ID, UMI_count)) + geom_boxplot()
 P2 + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-pdf("/home/arsham79/nsclc/results/plots/1.normalazation_UMI_count.pdf")
+pdf("/home/arsham79/nsclc/results/1.normalazation_UMI_count.pdf")
 P1 + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 P2 + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 dev.off()
 
-pbmc@meta.data$nCount_RNA <- Matrix::colSums(new_cnt)
-saveRDS(pbmc, "/home/arsham79/nsclc/results/normalized_and_scaled_pbmc.rds")
+saveRDS(new_cnt ,"/home/arsham79/nsclc/results/normalized_count_merged.rds")
