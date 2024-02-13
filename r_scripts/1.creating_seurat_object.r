@@ -7,7 +7,7 @@ suppressPackageStartupMessages(library(data.table))
 set.seed(42)
 
 #reading the RDS file
-pbmc <- readRDS("/home/arsham79/nsclc/results/normalized_and_scaled_pbmc.rds")
+pbmc <- readRDS("/home/arsham79/nsclc/results/1.normalized_and_scaled_pbmc.rds")
 
 #creating base of metadata based on barcodes as cells
 meta_data <- data.table(barcodes = rownames(pbmc@meta.data))
@@ -47,6 +47,8 @@ pbmc <- FindClusters(object = pbmc)
 pbmc <- FindClusters(object = pbmc, resolution = 0.5)
 pbmc <- FindClusters(object = pbmc, resolution = 0.3)
 pbmc <- RunUMAP(object = pbmc, dims = 1:15)
+
+saveRDS(pbmc, "/home/arsham79/nsclc/results/1.2_pbmc_not_removed_batch_effect.rds")
 
 pdf("/home/arsham79/nsclc/results/plots/2.UMPAS_from_not_removed_batch_effect.pdf")
 DimPlot(object = pbmc, reduction = "umap", group.by = "GEO", raster = FALSE)
