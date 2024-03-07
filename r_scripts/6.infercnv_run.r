@@ -20,7 +20,7 @@ infercnv_obj = CreateInfercnvObject(raw_counts_matrix = cnt,
                                     annotations_file = annot, 
                                     ref_group_names = c("N"))
 
-
+# you have to do it sample by sample
 infercnv_obj = infercnv::run(infercnv_obj,
                             cutoff=0.1, 
                             out_dir=tempfile(), 
