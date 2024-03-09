@@ -30,7 +30,7 @@ infercnv_obj = CreateInfercnvObject(raw_counts_matrix = cnt,
                                     delim = "\t",
                                     ref_group_names = c("N"))
 
-
+# you have to do it sample by sample
 infercnv_obj = infercnv::run(infercnv_obj,
                             cutoff=0.1, 
                             out_dir="/home/arsham79/scratch/nsclc/results/", 
