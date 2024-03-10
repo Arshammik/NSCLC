@@ -5,7 +5,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=6
 #SBATCH --mem-per-cpu=65536mb                    
-#SBATCH --time=24:00:00               
+#SBATCH --time=12:00:00               
 #SBATCH --output=/home/arsham79/scratch/nsclc/logs/MONOCOLE_3_GLM_%a.log 
 #SBATCH --account=rrg-hsn
 
