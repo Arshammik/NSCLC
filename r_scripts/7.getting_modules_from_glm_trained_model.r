@@ -12,7 +12,7 @@ set.seed(42)
 monocole_3_learned_object_RDS_direction <- "/home/arsham79/projects/rrg-hsn/arsham79/nsclc/results/monocole3_cds_objectd_trained.rds"
 monocole_3_DEGs_RDS_direction <- "/home/arsham79/projects/rrg-hsn/arsham79/nsclc/results/DEGs_monocole3.rds"
 
-# Reading the monocole 3 object
+# Reading the monocle 3 object
 cds <- readRDS(monocole_3_learned_object_RDS_direction)
 
 # The umap with partition discrimination 
@@ -64,6 +64,8 @@ degs_filt <- degs_filt[degs_filt$p_value < 0.05,]
 # Pre proccessing the monocole 3 object and finding gene modules
 genes_to_assess <- degs_filt$gene_short_name
 cds <- preprocess_cds(cds)
+gene_module_df <- find_gene_modules(cds[genes_to_assess,], resolution=0.01) # we manually set this to get aggregated gene 20 modules
+
 gene_module_df <- find_gene_modules(cds[genes_to_assess,], resolution=0.045) # we manually set this to get aggregated gene 20 modules
 
 # Creating a heatmap of aggregated modules expression correlation
@@ -90,7 +92,7 @@ gene_module_dt <- as.data.table(gene_module_df)
 ## NK cells cells has the module number 19 as significant 
 ## T cells cells has the module number 12 as significant 
 
-modules_to_assess <- c(3, 5, 6, 9, 10, 12, 15, 16, 19)
+modules_to_assess <- c(1, 4, 3, 5, 6, 7, 8, 9)
 module_saving_direction <- "/home/arsham79/projects/rrg-hsn/arsham79/nsclc/results/modules/"
 
 # Saving the modules as data table
