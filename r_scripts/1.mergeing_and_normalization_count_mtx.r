@@ -7,7 +7,7 @@ suppressPackageStartupMessages(library(data.table))
 suppressPackageStartupMessages(library(countsplit))
 set.seed(42)
 
-data_dirs <- list.files("/home/arsham79/scratch/nsclc/data/GSE189357_RAW/", full.names = TRUE)
+data_dirs <- list.files("/home/arsham79/projects/rrg-hsn/arsham79/nsclc/data/GSE189357_RAW/", full.names = TRUE)
 
 database <- data.table(path = data_dirs,
                        ID = sub("^.*(...$)","\\1",data_dirs))
@@ -17,6 +17,7 @@ for(i in 1:nrow(database)){
   cnt <- Read10X(database[,path][i])
   colnames(cnt) <- paste0(colnames(cnt), "_", database[,ID][i])
   GSE189357 <- cbind(GSE189357, cnt)
+  cat("The sample", i, "has been done! \n")
 }
 
 GSE131907 <- readRDS("/home/arsham79/scratch/nsclc/data/GSE131907_RAW/GSE131907_Lung_Cancer_raw_UMI_matrix.rds")
